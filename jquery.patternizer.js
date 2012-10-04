@@ -61,7 +61,7 @@
 			svg_image.attr("width", img.width).attr("height", img.height);
 		}
 
-		svg.attr("style", "position:absolute;top:0;left:0;z-index:-1");
+		svg.attr("style", "position:absolute;bottom:0;left:0;z-index:-1");
 		
 		span.attr("style", block_span_style);
 
