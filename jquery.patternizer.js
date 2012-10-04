@@ -73,6 +73,11 @@
 		svg.attr("width", text_width).attr("height", text_height);
 		
 		svg_text.attr("font-size", text_fontsize);
+		
+		/*! opera postfix hack */
+		if (window.opera) {
+			svg.attr("style", "position:absolute;bottom:0.065em;left:0;z-index:-1");
+		}
 	}
 	
 	function updateBlocks() {
