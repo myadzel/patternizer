@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Example of simulating "-webkit-background-clip: text" property — resize, copy, search, etc.</title>
+		<meta charset="utf-8" />
+		<style type="text/css">
+			* {
+				margin: 0;
+				padding: 0;
+			}
+			body {
+				font-size: 1em;
+				background: #fff;
+				font-family: times;
+				line-height: 1.6;
+				margin: 1em;
+			}
+			.para {
+				margin: 0 0 1em;
+				font-size: 1.1em;
+			}
+			.heading {
+				width: auto;
+				font-size: 20em;
+				line-height: 1.3em;
+				font-weight: normal;
+			}
+			.arial {
+				font-family: arial;
+			}
+		</style>
+		<script src="jquery-1.8.2.min.js"></script>
+		<script src="../jquery.patternizer.js"></script>
+	</head>
+	<body>
+		<p class="para">Example of simulating "<a href="http://webkit.org/blog/164/background-clip-text/">-webkit-background-clip: text</a>" property — resize, copy, search, etc.</p>
+		<div class="arial">
+			<h2 class="heading"><span class="background-clip" data-pattern="Igreja_de_Campanha_Azulejo_4.jpg">Pattern</span></h2>
+			<p class="para">A <a href="http://en.wikipedia.org/wiki/Pattern"><span class="background-clip" data-pattern="Igreja_de_Campanha_Azulejo_4__small.jpg">pattern</span></a>, from the French patron, is a type of theme of recurring events or objects, sometimes referred to as elements of a set of objects.</p>
+			<p class="para">The elements of a <span class="background-clip" data-pattern="Igreja_de_Campanha_Azulejo_4__small.jpg">pattern</span> repeat in a predictable manner. <span class="background-clip" data-pattern="Igreja_de_Campanha_Azulejo_4__small.jpg">Patterns</span> can be based on a template or model which generates <span class="background-clip" data-pattern="Igreja_de_Campanha_Azulejo_4__small.jpg">pattern</span> elements, especially if the elements have enough in common for the underlying pattern to be inferred, in which case the things are said to exhibit the unique <span class="background-clip" data-pattern="Igreja_de_Campanha_Azulejo_4__small.jpg">pattern</span>. There are many different <span class="background-clip" data-pattern="Igreja_de_Campanha_Azulejo_4__small.jpg">patterns</span> in the world.</p>
+		</div>
+		<script>
+			$(".background-clip").patternizer();
+		</script>
+	</body>
+</html>
