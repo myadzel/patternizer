@@ -1,5 +1,6 @@
 (function ($) {
 	var 
+		opera = window.opera && window.opera.toString() == "[object Opera]",
 		fontsize_measurer_id = "fontsize-measurer__" + (+new Date()),
 		block_style = "position:relative;display:inline;width:auto;",
 		block_span_style = "color:transparent;display:inline;position:relative;z-index:2;cursor:inherit;white-space:nowrap;vertical-align:baseline;",
@@ -16,10 +17,6 @@
 			svg: "http://www.w3.org/2000/svg",
 			xlink: "http://www.w3.org/1999/xlink"
 		};
-	
-	function getCSSValue(obj, prop) {
-		return $(obj).css(prop);
-	}
 
 	function isSVGNativeSupported() {
 		return document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#BasicStructure", "1.1");
@@ -49,10 +46,8 @@
 			span = block.span,
 			svg = block.svg,
 			svg_text = block.svg_text,
-			
 			svg_pattern = block.svg_pattern || null,
 			svg_image = block.svg_image || null,
-
 			img = block.img;
 
 		if (svg_pattern && svg_image) {
@@ -68,14 +63,14 @@
 		var 
 			text_width = span.width(),
 			text_height = span.height(),
-			text_fontsize = parseFloat(getCSSValue(span, "font-size"));
+			text_fontsize = span.css("font-size");
 		
 		svg.attr("width", text_width).attr("height", text_height);
 		
 		svg_text.attr("font-size", text_fontsize);
 		
 		/*! opera postfix hack */
-		if (window.opera) {
+		if (opera) {
 			svg.attr("style", "position:absolute;bottom:0.065em;left:0;z-index:-1");
 		}
 	}
@@ -87,10 +82,10 @@
 	}
 	
 	function getFontSizeMeasurerValue() {
-		return parseFloat(getCSSValue(fontsize_measurer, "font-size")) + fontsize_measurer.height() + fontsize_measurer.width();
+		return parseFloat(fontsize_measurer.css("font-size")) + fontsize_measurer.height() + fontsize_measurer.width();
 	}
 	
-	function initBlocksUpdater() {
+	function buildMeasurer() {
 		fontsize_measurer = $(document.createElementNS(NS.xhtml, "span"));
 		
 		fontsize_measurer.attr("id", fontsize_measurer_id).attr("style", "display:inline;position:absolute;left:-10000px");
@@ -98,6 +93,10 @@
 		fontsize_measurer.html((new Array(100)).join("&#160;"));
 		
 		$("body").append(fontsize_measurer);
+	}
+	
+	function initBlocksUpdater() {
+		buildMeasurer();
 		
 		fontsize_measurer_value = getFontSizeMeasurerValue();
 		
@@ -132,7 +131,6 @@
 			svg_pattern_value,
 			svg_image,
 			helper_image,
-			
 			text_width,
 			text_height,
 			text_fontsize;
@@ -154,10 +152,10 @@
 			
 			block.append(span);
 			
-			text_width = parseFloat(getCSSValue(span, "width"));
-			text_height = parseFloat(getCSSValue(span, "height"));
+			text_width = span.css("width");
+			text_height = span.css("height");
 			
-			text_fontsize = parseFloat(getCSSValue(span, "font-size"));
+			text_fontsize = span.css("font-size");
 
 			svg = $(document.createElementNS(NS.svg, "svg"));
 
@@ -200,7 +198,7 @@
 			
 			/*! http://www.opera.com/docs/specs/opera9/svg/ */
 			svg_text.attr("dominant-baseline", "text-before-edge");
-			if (window.opera) { /*hack for simulating dominant-baseline: text-before-edge*/
+			if (opera) { /*hack for simulating dominant-baseline: text-before-edge*/
 				svg_text.attr("y",  text_fontsize);
 				svg_text[0].setAttribute("textLength", text_width)
 			}
@@ -220,8 +218,8 @@
 
 			helper_image = new Image();
 
-			helper_image.onload = (function(img, block) {
-				checkImageLoaded(img, block); //for WebKit bug 
+			helper_image.onload = (function (img, block) {
+				checkImageLoaded(img, block); //for possible bug in WebKit
 			})(helper_image, text_blocks[i]);
 			
 			helper_image.src = svg_pattern_value;
