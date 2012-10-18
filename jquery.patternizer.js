@@ -1,17 +1,17 @@
 (function ($) {
 	var 
 		opera = window.opera && window.opera.toString() == "[object Opera]",
-		fontsize_measurer_id = "fontsize-measurer__" + (+new Date()),
-		block_style = "position:relative;display:inline;width:auto;",
-		block_span_style = "color:transparent;display:inline;position:relative;z-index:2;cursor:inherit;white-space:nowrap;vertical-align:baseline;",
-		text_blocks = [],
-		fontsize_measurer,
-		fontsize_measurer_value = 0,
-		svg_defs_cache = {},
-		blocks_count_total = 0,
-		blocks_count_updated = 0,
+		fontsizeMeasurerId = "fontsize-measurer__" + (+new Date()),
+		blockStyle = "position:relative;display:inline;width:auto;",
+		blockSpanStyle = "color:transparent;display:inline;position:relative;z-index:2;cursor:inherit;white-space:nowrap;vertical-align:baseline;",
+		textBlocks = [],
+		fontsizeMeasurer,
+		fontsizeMeasurerValue = 0,
+		svgDefsCache = {},
+		blocksCountTotal = 0,
+		blocksCountUpdated = 0,
 		elements,
-		svg_pattern_prefix = "pattern__",
+		svgPatternPrefix = "pattern__",
 		NS = {
 			xhtml: "http://www.w3.org/1999/xhtml",
 			svg: "http://www.w3.org/2000/svg",
@@ -27,12 +27,12 @@
 			if (img && img.complete && img.width > 0 && img.height > 0) {
 				block.img = img;
 
-				blocks_count_updated++;
+				blocksCountUpdated++;
 				
 				updateBlock(block);
 
 				//blocks final redrawing (bug in WebKit)
-				if (blocks_count_updated == blocks_count_total) {
+				if (blocksCountUpdated == blocksCountTotal) {
 					updateBlocks();
 				}
 			} else {
@@ -45,29 +45,29 @@
 		var 
 			span = block.span,
 			svg = block.svg,
-			svg_text = block.svg_text,
-			svg_pattern = block.svg_pattern || null,
-			svg_image = block.svg_image || null,
+			svgText = block.svgText,
+			svgPattern = block.svgPattern || null,
+			svgImage = block.svgImage || null,
 			img = block.img;
 
-		if (svg_pattern && svg_image) {
-			svg_pattern.attr("width", img.width).attr("height", img.height);
+		if (svgPattern && svgImage) {
+			svgPattern.attr("width", img.width).attr("height", img.height);
 			
-			svg_image.attr("width", img.width).attr("height", img.height);
+			svgImage.attr("width", img.width).attr("height", img.height);
 		}
 
 		svg.attr("style", "position:absolute;bottom:0;left:0;z-index:-1");
 		
-		span.attr("style", block_span_style);
+		span.attr("style", blockSpanStyle);
 
 		var 
-			text_width = span.width(),
-			text_height = span.height(),
-			text_fontsize = span.css("font-size");
+			textWidth = span.width(),
+			textHeight = span.height(),
+			textFontsize = span.css("font-size");
 		
-		svg.attr("width", text_width).attr("height", text_height);
+		svg.attr("width", textWidth).attr("height", textHeight);
 		
-		svg_text.attr("font-size", text_fontsize);
+		svgText.attr("font-size", textFontsize);
 		
 		/*! opera postfix hack */
 		if (opera) {
@@ -76,37 +76,37 @@
 	}
 	
 	function updateBlocks() {
-		for (var i = 0, l = text_blocks.length; i < l; i++) {
-			updateBlock(text_blocks[i]);
+		for (var i = 0, l = textBlocks.length; i < l; i++) {
+			updateBlock(textBlocks[i]);
 		}
 	}
 	
 	function getFontSizeMeasurerValue() {
-		return parseFloat(fontsize_measurer.css("font-size")) + fontsize_measurer.height() + fontsize_measurer.width();
+		return parseFloat(fontsizeMeasurer.css("font-size")) + fontsizeMeasurer.height() + fontsizeMeasurer.width();
 	}
 	
 	function buildMeasurer() {
-		fontsize_measurer = $(document.createElementNS(NS.xhtml, "span"));
+		fontsizeMeasurer = $(document.createElementNS(NS.xhtml, "span"));
 		
-		fontsize_measurer.attr("id", fontsize_measurer_id).attr("style", "display:inline;position:absolute;left:-10000px");
+		fontsizeMeasurer.attr("id", fontsizeMeasurerId).attr("style", "display:inline;position:absolute;left:-10000px");
 
-		fontsize_measurer.html((new Array(100)).join("&#160;"));
+		fontsizeMeasurer.html((new Array(100)).join("&#160;"));
 		
-		$("body").append(fontsize_measurer);
+		$("body").append(fontsizeMeasurer);
 	}
 	
 	function initBlocksUpdater() {
 		buildMeasurer();
 		
-		fontsize_measurer_value = getFontSizeMeasurerValue();
+		fontsizeMeasurerValue = getFontSizeMeasurerValue();
 		
 		(function updater() {
-			var fontsize_measurer_value_current = getFontSizeMeasurerValue();
+			var fontsizeMeasurerValueCurrent = getFontSizeMeasurerValue();
 			
-			if (fontsize_measurer_value != fontsize_measurer_value_current) { 
+			if (fontsizeMeasurerValue != fontsizeMeasurerValueCurrent) { 
 				updateBlocks();
 
-				fontsize_measurer_value = fontsize_measurer_value_current;
+				fontsizeMeasurerValue = fontsizeMeasurerValueCurrent;
 			}
 			
 			setTimeout(updater, 100);
@@ -114,48 +114,48 @@
 	}
 	
 	function createBlocks() {
-		blocks_count_total = elements.length;
+		blocksCountTotal = elements.length;
 
-		if (!blocks_count_total) { //typeof document.documentElement.style.WebkitBackgroundClip == "undefined"
+		if (!blocksCountTotal) { //typeof document.documentElement.style.WebkitBackgroundClip == "undefined"
 			return;
 		}
 
 		var 
 			block,
-			block_text,
+			blockText,
 			span,
 			svg,
-			svg_defs,
-			svg_text,
-			svg_pattern,
-			svg_pattern_value,
-			svg_image,
-			helper_image,
-			text_width,
-			text_height,
-			text_fontsize;
+			svgDefs,
+			svgText,
+			svgPattern,
+			svgPatternValue,
+			svgImage,
+			helperImage,
+			textWidth,
+			textHeight,
+			textFontsize;
 		
 		elements.each(function (i) {
 			block = $(this);
 			
-			block.attr("style", block_style);
+			block.attr("style", blockStyle);
 			
-			block_text = block.text();
+			blockText = block.text();
 			
 			block.text("");
 
 			span = $(document.createElementNS(NS.xhtml, "span"));
 
-			span.html("<span>" + block_text + "</span>");
+			span.html("<span>" + blockText + "</span>");
 			
-			span.attr("style", block_span_style + "height:" + block.height() + "px; width:" + block.width() + "px;");
+			span.attr("style", blockSpanStyle + "height:" + block.height() + "px; width:" + block.width() + "px;");
 			
 			block.append(span);
 			
-			text_width = span.css("width");
-			text_height = span.css("height");
+			textWidth = span.css("width");
+			textHeight = span.css("height");
 			
-			text_fontsize = span.css("font-size");
+			textFontsize = span.css("font-size");
 
 			svg = $(document.createElementNS(NS.svg, "svg"));
 
@@ -166,65 +166,65 @@
 
 			span.append(svg);
 			
-			span.attr("style", block_span_style);
+			span.attr("style", blockSpanStyle);
 
-			svg_pattern_value = block.data("pattern");
+			svgPatternValue = block.data("pattern");
 
-			svg_defs = $(document.createElementNS(NS.svg, "defs"));
+			svgDefs = $(document.createElementNS(NS.svg, "defs"));
 			
-			svg.append(svg_defs);
+			svg.append(svgDefs);
 			
-			svg_pattern = $(document.createElementNS(NS.svg, "pattern"));
-			svg_pattern.attr("id", svg_pattern_prefix + svg_pattern_value).attr("x", "0").attr("y", "0");
+			svgPattern = $(document.createElementNS(NS.svg, "pattern"));
+			svgPattern.attr("id", svgPatternPrefix + svgPatternValue).attr("x", "0").attr("y", "0");
 			
-			svg_pattern[0].setAttribute("patternUnits", "userSpaceOnUse");
+			svgPattern[0].setAttribute("patternUnits", "userSpaceOnUse");
 			
-			svg_defs.append(svg_pattern);
+			svgDefs.append(svgPattern);
 			
-			svg_image = $(document.createElementNS(NS.svg, "image"));
-			svg_image[0].setAttributeNS(NS.xlink, "xlink:href", svg_pattern_value); 
+			svgImage = $(document.createElementNS(NS.svg, "image"));
+			svgImage[0].setAttributeNS(NS.xlink, "xlink:href", svgPatternValue); 
 			
-			svg_image.attr("x", "0").attr("y", "0");
+			svgImage.attr("x", "0").attr("y", "0");
 
-			svg_pattern.append(svg_image);
+			svgPattern.append(svgImage);
 			
-			svg_defs_cache[svg_pattern_value] = svg_pattern;
+			svgDefsCache[svgPatternValue] = svgPattern;
 
-			svg_text = $(document.createElementNS(NS.svg, "text"));
+			svgText = $(document.createElementNS(NS.svg, "text"));
 
-			svg_text.text(block_text);
+			svgText.text(blockText);
 			
-			svg_text.attr("x", "0").attr("y", "0").attr("font-size", text_fontsize);
+			svgText.attr("x", "0").attr("y", "0").attr("font-size", textFontsize);
 			
 			/*! http://www.opera.com/docs/specs/opera9/svg/ */
-			svg_text.attr("dominant-baseline", "text-before-edge");
+			svgText.attr("dominant-baseline", "text-before-edge");
 			if (opera) { /*hack for simulating dominant-baseline: text-before-edge*/
-				svg_text.attr("y",  text_fontsize);
-				svg_text[0].setAttribute("textLength", text_width)
+				svgText.attr("y",  textFontsize);
+				svgText[0].setAttribute("textLength", textWidth)
 			}
 			
-			svg_text.attr("fill", "url(#" + svg_pattern_prefix + svg_pattern_value + ")");
+			svgText.attr("fill", "url(#" + svgPatternPrefix + svgPatternValue + ")");
 			
-			svg.append(svg_text);
+			svg.append(svgText);
 			
-			text_blocks.push({
+			textBlocks.push({
 				span: span, 
 				svg: svg, 
-				svg_text: svg_text, 
-				svg_pattern: svg_pattern, 
-				svg_image: svg_image, 
+				svgText: svgText, 
+				svgPattern: svgPattern, 
+				svgImage: svgImage, 
 				img: null
 			});
 
-			helper_image = new Image();
+			helperImage = new Image();
 
-			helper_image.onload = (function (img, block) {
+			helperImage.onload = (function (img, block) {
 				checkImageLoaded(img, block); //for possible bug in WebKit
-			})(helper_image, text_blocks[i]);
+			})(helperImage, textBlocks[i]);
 			
-			helper_image.src = svg_pattern_value;
+			helperImage.src = svgPatternValue;
 
-			block.attr("style", block_span_style);
+			block.attr("style", blockSpanStyle);
 		});
 
 		initBlocksUpdater();
