@@ -48,13 +48,8 @@
 			svgText = block.svgText,
 			svgPattern = block.svgPattern || null,
 			svgImage = block.svgImage || null,
-			img = block.img;
-
-		if (svgPattern && svgImage) {
-			svgPattern.attr("width", img.width).attr("height", img.height);
-			
-			svgImage.attr("width", img.width).attr("height", img.height);
-		}
+			img = block.img,
+			center = block.center;
 
 		svg.attr("style", "position:absolute;bottom:0;left:0;z-index:-1");
 		
@@ -63,9 +58,22 @@
 		var 
 			textWidth = span.width(),
 			textHeight = span.height(),
-			textFontsize = span.css("font-size");
+			textFontsize = span.css("font-size"),
+			position_x = position_y = 0;
+		
+		if(center){
+			position_x = ( img.width - textWidth ) / 2;
+			position_y = ( img.height - textHeight ) / 2;
+		}
 		
 		svg.attr("width", textWidth).attr("height", textHeight);
+		
+		if (svgPattern && svgImage) {
+			svgPattern.attr("width", img.width).attr("height", img.height);
+			
+			svgImage.attr("width", img.width).attr("height", img.height);
+			svgImage.attr("x", '-'+position_x+'px').attr('y','-'+position_y+'px');
+		}
 		
 		svgText.attr("font-size", textFontsize);
 		
@@ -113,13 +121,15 @@
 		})();
 	}
 	
-	function createBlocks() {
+	function createBlocks(center) {
 		blocksCountTotal = elements.length;
 
 		if (!blocksCountTotal) { //typeof document.documentElement.style.WebkitBackgroundClip == "undefined"
 			return;
 		}
-
+		
+		if(center !== false && center !== true) center = true;
+		
 		var 
 			block,
 			blockText,
@@ -213,7 +223,8 @@
 				svgText: svgText, 
 				svgPattern: svgPattern, 
 				svgImage: svgImage, 
-				img: null
+				img: null,
+				center: center
 			});
 
 			helperImage = new Image();
@@ -233,9 +244,10 @@
 	var methods = {
 		init: function (options) {
 			elements = $(this);
-
+			if(options === undefined) options = {center:true};
+			
 			if (isSVGNativeSupported()) {
-				createBlocks();
+				createBlocks(options.center);
 			}
 		}
 	};
