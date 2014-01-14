@@ -1,5 +1,4 @@
-
-n ($) {
+function ($) {
 	var 
 		opera = window.opera && window.opera.toString() == "[object Opera]",
 		fontsizeMeasurerId = "fontsize-measurer__" + (+new Date()),
